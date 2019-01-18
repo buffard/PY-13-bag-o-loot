@@ -21,16 +21,16 @@ def getChild(child):
   with sqlite3.connect(lootbag_db) as conn:
     cursor = conn.cursor()
 
-  cursor.execute(f'''SELECT c.*, g.Name
+    cursor.execute(f'''SELECT c.*, g.Name
                     FROM Children c
                     JOIN Gifts g 
                     ON c.childid = g.childid
                     WHERE c.Name = '{child}'
                     ''')
   
-  child = cursor.fetchone()
-  print(child)
-  return child
+    child = cursor.fetchone()
+    print(child)
+    return child
 
 def addChild(child):
   with sqlite3.connect(lootbag_db) as conn:
@@ -65,19 +65,22 @@ def addGift(gift):
     except sqlite3.OperationalError as err:
       print("oops", err)
 
+def removeGift(gift):
+  with sqlite3.connect(lootbag_db) as conn:
+    cursor = conn.cursor()
+
+    try:
+      cursor.execute('''
+        DELETE FROM Gifts 
+        WHERE childid in (SELECT c.childid from Children c WHERE c.name = '{0}')
+        AND name = '{1}'
+        '''.format(gift[2], gift[3])
+      )
+    except sqlite3.OperationalError as err:
+      print("oops", err)
 
 
-
-# INSERT INTO Sidekicks
-#  SELECT null, 'Robin', 'M', 'Neerdowell', SuperheroId
-#  FROM Superheroes s
-#  WHERE s.Name = name;
-
-# INSERT INTO Gifts
-# SELECT null, 'balloon', 1, childid
-# FROM Children c
-# WHERE c.Name = "Samuel";
-
+# python lootbag.py ls
 
 
 if __name__ == "__main__":
@@ -89,5 +92,14 @@ if __name__ == "__main__":
   # })
   if sys.argv[1] == 'add':
     addGift(sys.argv)
-  # elif sys.argv[1] == 'get-all':
-  #       getChildren()
+  elif sys.argv[1] == 'get-all':
+    getChildren()
+  elif sys.argv[1] == 'get-child':
+    getChild(sys.argv[2])
+  elif sys.argv[1] == 'add-child':
+    addChild({
+      'name': sys.argv[2],
+      'receiving': sys.argv[3]
+    })
+  elif sys.argv[1] == 'remove':
+        removeGift(sys.argv)
