@@ -98,6 +98,28 @@ def receiving(gift):
     except sqlite3.OperationalError as err:
       print("oops", err)
 
+def list_of_gifts(name):
+  with sqlite3.connect(lootbag_db) as conn:
+    cursor = conn.cursor()
+
+    try:
+      cursor.execute(f'''
+        SELECT name
+        FROM Gifts 
+        WHERE childid in (SELECT c.childid from Children c WHERE    c.name = '{name}' and c.receiving = 1)
+      '''
+      )
+      show = cursor.fetchall()
+      print(show)
+    
+    except sqlite3.OperationalError as err:
+      print("oops", err)
+
+# List toys in the bag o' loot for a specific child.
+# python lootbag.py ls suzy
+
+
+
 
 if __name__ == "__main__":
   # getChildren()
@@ -119,5 +141,7 @@ if __name__ == "__main__":
     })
   elif sys.argv[1] == 'remove':
     removeGift(sys.argv)
-  elif sys.argv[1] == 'ls': 
+  elif sys.argv[1] == 'ls-child': 
     receiving(sys.argv)
+  elif sys.argv[1] == 'ls-gifts': 
+    list_of_gifts(sys.argv[2])
