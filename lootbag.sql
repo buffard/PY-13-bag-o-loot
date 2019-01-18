@@ -1,0 +1,23 @@
+DELETE FROM Children;
+DELETE FROM Gift;
+
+PRAGMA foreign_keys = ON;
+
+DROP TABLE IF EXISTS Children;
+DROP TABLE IF EXISTS Gift;
+
+CREATE TABLE `Children` (
+  `Childid` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  `Name` TEXT NOT NULL,
+  `Receiving` BIT NOT NULL
+);
+
+CREATE TABLE `Gift` (
+    `Giftid` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `Name` TEXT NOT NULL,
+    `Delivered` BIT NOT NULL,
+    `Childid` INTEGER NOT NULL,
+    FOREIGN KEY(`Childid`)
+  REFERENCES `Children`(`Childid`)
+  ON DELETE CASCADE
+);
