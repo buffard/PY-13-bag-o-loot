@@ -1,10 +1,10 @@
 DELETE FROM Children;
-DELETE FROM Gift;
+DELETE FROM Gifts;
 
 PRAGMA foreign_keys = ON;
 
 DROP TABLE IF EXISTS Children;
-DROP TABLE IF EXISTS Gift;
+DROP TABLE IF EXISTS Gifts;
 
 CREATE TABLE `Children` (
   `Childid` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -12,7 +12,10 @@ CREATE TABLE `Children` (
   `Receiving` BIT NOT NULL
 );
 
-CREATE TABLE `Gift` (
+INSERT INTO Children VALUES (null, 'suzy', '1');
+INSERT INTO Children VALUES (null, 'michael', '1');
+
+CREATE TABLE `Gifts` (
     `Giftid` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     `Name` TEXT NOT NULL,
     `Delivered` BIT NOT NULL,
