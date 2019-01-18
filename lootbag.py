@@ -80,7 +80,23 @@ def removeGift(gift):
       print("oops", err)
 
 
-# python lootbag.py ls
+# Produce a list of children currently receiving presents.
+
+def receiving(gift):
+  with sqlite3.connect(lootbag_db) as conn:
+    cursor = conn.cursor()
+
+    try:
+      cursor.execute('''
+        SELECT *
+        FROM Children c
+        WHERE Receiving = 1
+      ''')
+      show = cursor.fetchall()
+      print(show)
+    
+    except sqlite3.OperationalError as err:
+      print("oops", err)
 
 
 if __name__ == "__main__":
@@ -102,4 +118,6 @@ if __name__ == "__main__":
       'receiving': sys.argv[3]
     })
   elif sys.argv[1] == 'remove':
-        removeGift(sys.argv)
+    removeGift(sys.argv)
+  elif sys.argv[1] == 'ls': 
+    receiving(sys.argv)
